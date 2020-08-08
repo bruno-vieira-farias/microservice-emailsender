@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.util.List;
 import java.util.Properties;
 
 @Service
@@ -25,21 +24,21 @@ public class EnviaEmailService {
             @Value("${mailsender.password}") String password
     ) {
         this.from = from;
-        setup(server, port, ssl, password);
+        setup(server, port, ssl, password,from);
     }
 
-    public void enviaEmailSolicitacaoEmprestimo(List<String> destinatarios, String nome){
+    public void enviaEmailSolicitacaoEmprestimo(String destinatario, String nome){
         enviaEmail("Sua solicitação de emprestimo foi confirmada." ,
                 "Olá "+ nome + ", Sua solicitação de emprestimo foi realizada. Agora  deixe o resto a gente ;)",
-                destinatarios);
+                destinatario);
     }
 
-    private void enviaEmail(String assunto, String mensagem, List<String> destinatarios) {
+    private void enviaEmail(String assunto, String mensagem, String destinatario) {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(from));
 
-            Address[] toUser = InternetAddress.parse(String.join(",",destinatarios));
+            Address[] toUser = InternetAddress.parse(destinatario);
 
             message.setRecipients(Message.RecipientType.TO, toUser);
             message.setSubject(assunto);
@@ -53,7 +52,7 @@ public class EnviaEmailService {
         }
     }
 
-    private void setup(String server, String port, String ssl, String password) {
+    private void setup(String server, String port, String ssl, String password,String from) {
         Properties props = new Properties();
         props.put("mail.smtp.host", server);
         props.put("mail.smtp.socketFactory.port", port);

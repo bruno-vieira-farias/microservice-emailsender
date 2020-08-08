@@ -45,11 +45,8 @@ public class EnviaEmailDaFila {
         try {
 
             ItemFila item = objectMapper.readValue(json, ItemFila.class);
-            if (item.getTipo().equals("SOLICITACAO_EMPRESTIMO")) {
-                emailService.enviaEmailSolicitacaoEmprestimo(item.getDestinatarios(), item.getNome());
-            }else {
-                System.out.println("O tipo de item da fila não foi mapeado.");
-            }
+            emailService.enviaEmailSolicitacaoEmprestimo(item.getDestinatario(), item.getNome());
+
         } catch (IOException e) {
             e.printStackTrace();
         }

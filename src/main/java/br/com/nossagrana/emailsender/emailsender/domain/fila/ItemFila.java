@@ -6,25 +6,23 @@ import java.util.List;
  *  Representa um item da fila.
  */
 public class ItemFila {
-    private List<String> destinatarios;
+    private String destinatario;
     private String nome;
-    private String tipo;
 
     public ItemFila() {
     }
 
-    public ItemFila(List<String> destinatario, String nome, String tipo) {
-        this.destinatarios = destinatario;
+    public ItemFila(String destinatario, String nome, String tipo) {
+        this.destinatario = destinatario;
         this.nome = nome;
-        this.tipo = tipo;
     }
 
-    public List<String> getDestinatarios() {
-        return destinatarios;
+    public String getDestinatario() {
+        return destinatario;
     }
 
-    public void setDestinatarios(List<String> destinatario) {
-        this.destinatarios = destinatario;
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
     }
 
     public String getNome() {
@@ -33,13 +31,5 @@ public class ItemFila {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 }
