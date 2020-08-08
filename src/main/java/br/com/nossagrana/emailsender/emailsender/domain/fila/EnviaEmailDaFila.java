@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -15,30 +16,39 @@ public class EnviaEmailDaFila {
     private RabbitTemplate template;
     private EnviaEmailService emailService;
     private ObjectMapper objectMapper;
+    private String queueName;
 
     @Autowired
-    public EnviaEmailDaFila(EnviaEmailService emailService, CloudAmqpConnection cloudAmqpConnection) {
+    public EnviaEmailDaFila(
+            EnviaEmailService emailService,
+            CloudAmqpConnection cloudAmqpConnection,
+            @Value("${mailsender.cloudamqp.queue-name}") String queueName
+
+    ) {
         this.emailService = emailService;
         this.template = new RabbitTemplate(cloudAmqpConnection.getConnection());
         this.objectMapper = new ObjectMapper();
+        this.queueName = queueName;
     }
 
     /**
      * Verifica se existe e-mail para envio na fila e envia caso o encontre.
      */
     public void enviaEmailDisponivelNaFila() {
-        Message itemFila = template.receive("email");
+        Message itemFila = template.receive(queueName);
 
         if (itemFila == null) {
             return;
         }
-        byte[] jsonFila = itemFila.getBody();
+        byte[] json = itemFila.getBody();
 
         try {
 
-            ItemFila item = objectMapper.readValue(jsonFila, ItemFila.class);
+            ItemFila item = objectMapper.readValue(json, ItemFila.class);
             if (item.getTipo().equals("SOLICITACAO_EMPRESTIMO")) {
                 emailService.enviaEmailSolicitacaoEmprestimo(item.getDestinatarios(), item.getNome());
+            }else {
+                System.out.println("O tipo de item da fila não foi mapeado.");
             }
         } catch (IOException e) {
             e.printStackTrace();
