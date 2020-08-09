@@ -29,7 +29,7 @@ public class EnviaEmailService {
 
     public void enviaEmailSolicitacaoEmprestimo(String destinatario, String nome){
         enviaEmail("Sua solicitação de emprestimo foi confirmada." ,
-                "Olá "+ nome + ", Sua solicitação de emprestimo foi realizada. Agora  deixe o resto a gente ;)",
+                "Olá "+ nome + ". Sua solicitação de emprestimo foi realizada, agora é só relaxar e deixar o resto a gente ;)",
                 destinatario);
     }
 
