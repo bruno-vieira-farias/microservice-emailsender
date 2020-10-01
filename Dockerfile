@@ -1,7 +1,7 @@
 #
 # Build stage
 #
-FROM maven:3.6.0-jdk-8-slim AS build
+FROM maven:3.6.0-jdk-11-slim AS build
 WORKDIR /home/app
 COPY pom.xml .
 RUN mvn dependency:resolve
